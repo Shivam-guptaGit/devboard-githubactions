@@ -6,7 +6,6 @@ on:
         branches: [advanced]
 
 jobs: 
-    
     frontend:
         runs-on: ubuntu-latest
         steps:  
