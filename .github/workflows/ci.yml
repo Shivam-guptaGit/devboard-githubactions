@@ -2,10 +2,11 @@
 # then push the images to dockerhub
 name: CI
 on:
-    push: 
-        branches: [advanced]
+  push: 
+    branches: [advanced]
 
 jobs: 
+    
     frontend:
         runs-on: ubuntu-latest
         steps:  
@@ -20,19 +21,15 @@ jobs:
               # used to specify path of a dependency file like package-lock
               cache-dependency-path: frontend/package-lock.json
           - name: Install npm packages
-            run:  npm ci
+            run:  npm install 
+            working-directory: frontend
 
           - name:  Run Linter
             run:  npm run lint 
+            working-directory: frontend
 
           - name: Run tests
             run: np run test
+            working-directory: frontend
 
           
-          #- Push 
-    #backend:  
-     #   steps:  
-      #    - Lint
-       #   - Build
-        #  - Test
-         # - Push 
