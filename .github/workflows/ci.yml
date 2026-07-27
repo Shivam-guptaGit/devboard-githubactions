@@ -45,3 +45,44 @@ jobs:
               file: ./frontend/Dockerfile
               push: true
               tags: ${{ vars.DOCKERHUB_USERNAME }}/devboard-frontend-master:latest
+    
+    backend:
+        runs-on: ubuntu-latest
+        steps:  
+          - name: Checkout code
+            uses: actions/checkout@v7
+
+          - name: Setup go
+            uses: actions/setup-go@v6
+            with:
+    # Version or version range of Go to use
+              go-version: '1.23'
+              go-version-file: 'go.mod'
+              cache-dependency-path: 'go.sum'
+
+          
+          - name: Run go formatter  
+            run:  go fmt  
+            working-directory: backend
+
+          - name:  Run go vet
+            run:  go vet
+            working-directory: backend
+
+          - name: Run tests in go
+            run: go test
+            working-directory: backend
+
+          - name: Login to Docker Hub
+            uses: docker/login-action@v4
+            with:
+              username: ${{ vars.DOCKERHUB_USERNAME }}
+              password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+          - name: Build frontend image
+            uses: docker/build-push-action@v5
+            with:
+              context: ./backend
+              file: ./backend/Dockerfile
+              push: true
+              tags: ${{ vars.DOCKERHUB_USERNAME }}/devboard-backend-master:latest
